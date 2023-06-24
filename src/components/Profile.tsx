@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Address } from "viem";
 import { useContractRead } from "wagmi";
 import { abi } from "../abi/MetaID.json";
+import TokenBoundAccount from "./TokenBoundAccount";
 interface ProfileProps {
 	address: Address;
 }
@@ -19,7 +20,7 @@ const Profile: React.FC<ProfileProps> = ({ address }) => {
 			localStorage.getItem("worldId");
 			setVerified(Boolean(hasWorldId));
 		}
-	});
+	}, [hasToken]);
 
 	const { data, isError, isLoading } = useContractRead({
 		address: MetaIDContract,
@@ -34,12 +35,14 @@ const Profile: React.FC<ProfileProps> = ({ address }) => {
 	return (
 		<>
 			<img src={URL + address} alt={address} />
-		
+
 			{verified && !hasToken && (
 				<button className="btn btn-accent mt-4">Claim ID</button>
 			)}
 
 			{verified && hasToken && <p>You are chain verified!</p>}
+
+			<TokenBoundAccount />
 		</>
 	);
 };
