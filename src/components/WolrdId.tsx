@@ -44,7 +44,9 @@ const WorldId = () => {
 					autoClose={true}
 					// walletConnectProjectId="get_this_from_walletconnect_portal"
 				>
-					{({ open }) => <button onClick={open}>Connect with Worldcoin</button>}
+					{({ open }) => <button
+						className="btn btn-accent"
+					onClick={open}>Connect with Worldcoin</button>}
 				</IDKitWidget>
 			)}
 		</>

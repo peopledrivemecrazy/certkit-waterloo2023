@@ -1,13 +1,12 @@
-import { useAccount, useEnsName } from 'wagmi'
+import { useAccount,  } from 'wagmi'
 
 export function Account() {
   const { address } = useAccount()
-  const { data: ensName } = useEnsName({ address })
+  // const { data: ensName } = useEnsName({ address })
 
   return (
     <div>
-      {ensName ?? address}
-      {ensName ? ` (${address})` : null}
+     {address}
     </div>
   )
 }
