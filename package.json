@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@worldcoin/idkit": "^0.5.1",
     "buffer": "^6.0.3",
     "process": "^0.11.10",
     "react": "^18.2.0",
