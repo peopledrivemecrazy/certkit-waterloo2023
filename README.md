@@ -23,4 +23,4 @@ Users can claim their personalized nouns artwork, and the companion [metaid-issu
 
 Once you have successfully claimed your ID, you will possess an NFT that serves as proof of your personhood. This NFT becomes your unique chain identity within the MetaCert application. Rest assured that your privacy remains intact, as no personal information is exposed to the outside world.
 
-Additionally, you can take advantage of the AI-generated tests to claim bounties using the ERC-6551 Token Bound Account.
+Additionally, you can take advantage of the AI-generated tests to claim bounties using the ERC-6551 Token Bound Account and all the POAPS are on IPFS.
