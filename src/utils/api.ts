@@ -20,5 +20,5 @@ export const submitQuiz = async (
 	console.log(fullUrl);
 	return await fetch(fullUrl)
 		.then((response) => response.json())
-		.then((data) => console.log(data));
+		.then((data) => data);
 };

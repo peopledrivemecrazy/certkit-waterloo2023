@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { submitQuiz } from "../utils/api";
 import { useAccount } from "wagmi";
+
 const URL =
 	"https://meta-cert-test-43e7e5165044.herokuapp.com/get_questions?id=";
 
@@ -22,6 +23,7 @@ const QuizPage = () => {
 	const location = useLocation();
 	const [_, __, quizId] = location.pathname.split("/");
 	const [questions, setQuestions] = useState<Questions>([]);
+	const [passed, setPassed] = useState<undefined | boolean>(undefined); // Initialize to undefined
 	const { isConnected, address } = useAccount();
 
 	useEffect(() => {
@@ -29,29 +31,37 @@ const QuizPage = () => {
 			.then((res) => res.json())
 			.then((data) => {
 				setQuestions(data);
-				console.log(data);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
 	}, []);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		const form = e.target as HTMLFormElement;
 		const formData = new FormData(form);
 		const answers: number[] = Array.from(formData.values()).map((value) =>
 			Number(value)
 		);
-		console.log({ address, isConnected });
-		console.log("Answers:", answers.join(","));
-		// Handle form submission logic
-		if (address) submitQuiz(quizId, answers.join(","), address);
+
+		if (address) {
+			const data = await submitQuiz(quizId, answers.join(","), address);
+			if (data.passed) {
+				setPassed(true);
+			} else {
+				setPassed(false);
+			}
+		}
+	};
+
+	const handleRetake = () => {
+		setPassed(undefined); // Reset the pass/fail status
 	};
 
 	return (
 		<>
-			<Link to="/" className=" btn btn-sm">
+			<Link to="/" className="btn btn-sm">
 				<span className="flex gap-1 items-center">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -72,30 +82,50 @@ const QuizPage = () => {
 			</Link>
 
 			<p>Quiz {quizId}</p>
-			<form onSubmit={handleSubmit}>
-				{questions.map((question) => (
-					<div key={question.questionId}>
-						<h4>{question.question}</h4>
-						<ul>
-							{question.choices.map((choice) => (
-								<li key={choice.choiceId}>
-									<label>
-										<input
-											type="radio"
-											name={question.questionId}
-											value={choice.choiceId}
-										/>
-										{choice.choice}
-									</label>
-								</li>
-							))}
-						</ul>
-					</div>
-				))}
-				<button type="submit" className="btn btn-neutral">
-					Submit
-				</button>
-			</form>
+			{passed === undefined ? ( // Display the form only if the pass/fail status is undefined
+				<form onSubmit={handleSubmit}>
+					{questions.map((question) => (
+						<div key={question.questionId}>
+							<h4>{question.question}</h4>
+							<ul>
+								{question.choices.map((choice) => (
+									<li key={choice.choiceId}>
+										<label>
+											<input
+												type="radio"
+												name={question.questionId}
+												value={choice.choiceId}
+											/>
+											{choice.choice}
+										</label>
+									</li>
+								))}
+							</ul>
+						</div>
+					))}
+					<button type="submit" className="btn btn-neutral">
+						Submit
+					</button>
+				</form>
+			) : (
+				<div>
+					{passed ? (
+						<>
+							<h2 className="text-3xl">You passed!</h2>
+                            <p>
+                                Your POAP is on the way!
+                            </p>
+						</>
+					) : (
+						<>
+							<h2 className="text-3xl">You failed.</h2>
+							<button onClick={handleRetake} className="btn btn-neutral">
+								Retake Quiz
+							</button>
+						</>
+					)}
+				</div>
+			)}
 		</>
 	);
 };
