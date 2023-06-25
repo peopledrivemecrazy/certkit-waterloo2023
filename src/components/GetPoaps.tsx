@@ -18,15 +18,26 @@ const GetPoaps: React.FC<GetPoapsProps> = ({
 		functionName: "getCertByAddress",
 		args: [tbaAddress],
 		onSuccess(data: number[]) {
-			setTokenIds(data);
+			setTokenIds(data.map((num) => Number(BigInt(num).toString())));
 			console.log(data);
 		},
 	});
 	return (
 		<div className="flex gap-4">
-			<div className="aspect-square h-32 w-32 bg-black rounded-xl"></div>
-			<div className="aspect-square h-32 w-32 bg-black rounded-xl"></div>
-			<div className="aspect-square h-32 w-32 bg-black rounded-xl"></div>
+			{tokenIds.map((tokenId) => (
+				<>
+					<div
+						className="aspect-square h-32 w-32 bg-black rounded-xl text-white"
+						key={tokenId}
+					>
+						{tokenId}
+					</div>
+				</>
+			))}
+
+			{/* <code>
+				<pre>{JSON.stringify({ isError, isLoading })}</pre>
+			</code> */}
 		</div>
 	);
 };

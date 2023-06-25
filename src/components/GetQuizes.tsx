@@ -27,7 +27,7 @@ const GetQuizes = () => {
 			<h1 className="text-3xl my-4">Tests</h1>
 			{quizes && (
 				<>
-					<div className="grid grid-cols-3 gap-4">
+					<div className="grid grid-cols-4 gap-4">
 						{quizes.map((quiz: Quiz) => (
 							<div key={quiz.id}>
 								<h2 className="sr-only">Summary</h2>
@@ -43,9 +43,9 @@ const GetQuizes = () => {
 										</div>
 										<div className="flex-none self-end px-6 pt-4">
 											<dt className="sr-only">Status</dt>
-											<dd className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-green-600/20">
+											{/* <dd className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-green-600/20">
 												Incomplete
-											</dd>
+											</dd> */}
 										</div>
 									</dl>
 									<div className="mt-6 border-t border-gray-900/5 px-6 py-6">

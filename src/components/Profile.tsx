@@ -15,7 +15,7 @@ import { useAccount } from "wagmi";
 import GetPoaps from "./GetPoaps";
 
 const MetaIDContract = "0xCC779eA62dde267a66D7C36e684Ee32d498c0a5F";
-const metaCertContract = "0x5A9014A0f7E6481D81D5c3A7AC2B35463D633465";
+const metaCertContract = "0xE359d0F906955eb6Cc096d8F7F561f767DF997B8";
 
 const URL = `https://noun-api.com/beta/pfp?name=`;
 
