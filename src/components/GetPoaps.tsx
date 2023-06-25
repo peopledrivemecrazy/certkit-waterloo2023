@@ -12,7 +12,7 @@ const GetPoaps: React.FC<GetPoapsProps> = ({
 	metaCertContract,
 }) => {
 	const [tokenIds, setTokenIds] = useState<number[]>([]);
-	const { data, isError, isLoading } = useContractRead({
+	useContractRead({
 		address: metaCertContract,
 		abi,
 		functionName: "getCertByAddress",
@@ -25,14 +25,12 @@ const GetPoaps: React.FC<GetPoapsProps> = ({
 	return (
 		<div className="flex gap-4">
 			{tokenIds.map((tokenId) => (
-				<>
-					<div
-						className="aspect-square h-32 w-32 bg-black rounded-xl text-white"
-						key={tokenId}
-					>
-						{tokenId}
-					</div>
-				</>
+				<img
+					className="aspect-square h-32 w-32 rounded-xl text-white"
+					key={tokenId}
+					src={`/${tokenId}.jpeg`}
+					alt=""
+				/>
 			))}
 
 			{/* <code>

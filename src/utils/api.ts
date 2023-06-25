@@ -1,9 +1,9 @@
 import { Address } from "viem";
 
-const API = "https://b207-2605-b100-34d-aa6f-69ff-486e-7e9-6306.ngrok-free.app";
+const API = "https://b4af-216-249-57-2.ngrok-free.app/";
 const TEST_URL = "https://meta-cert-test-43e7e5165044.herokuapp.com";
 export const makeClaim = async (address: string) => {
-	return await fetch(`${API}/issue`, {
+	return await fetch(`${API}/issue/id`, {
 		method: "POST",
 		body: JSON.stringify({ address }),
 	})
