@@ -1,6 +1,6 @@
 # wagmi + Vite Project: MetaCert Frontend
 
-Welcome to the wagmi + Vite project! This project is bootstrapped with `create-wagmi` and utilizes the Vite framework. It serves as the frontend for MetaCert, a decentralized application that leverages Worldcoin ID for proof of personhood and a web3 wallet (MetaMask for demo purposes).
+Welcome to the wagmi + Vite project! This project is bootstrapped with `pnpm create wagmi` and utilizes the Vite framework. It serves as the frontend for MetaCert, a decentralized application that leverages Worldcoin ID for proof of personhood and a web3 wallet (MetaMask for demo purposes).
 
 ## Getting Started
 
