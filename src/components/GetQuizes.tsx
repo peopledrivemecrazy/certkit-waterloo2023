@@ -16,7 +16,6 @@ const GetQuizes = () => {
 			.then((res) => res.json())
 			.then((data) => {
 				setQuizes(data);
-				console.log(data);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -36,7 +35,7 @@ const GetQuizes = () => {
 									<dl className="flex flex-wrap">
 										<div className="flex-auto pl-6 pt-6">
 											<dt className="text-sm font-semibold leading-6 text-gray-900">
-												{quiz.name}
+												{quiz.name} # {quiz.id}
 											</dt>
 											<dd className="mt-1 text-base font-semibold leading-6 text-gray-900">
 												Bounty: POAP

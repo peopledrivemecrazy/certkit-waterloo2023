@@ -12,15 +12,18 @@ import { TokenboundClient } from "@tokenbound/sdk";
 import { createWalletClient, custom, http, WalletClient } from "viem";
 import { polygonMumbai } from "viem/chains";
 import { useAccount } from "wagmi";
+import GetPoaps from "./GetPoaps";
 
 const MetaIDContract = "0xCC779eA62dde267a66D7C36e684Ee32d498c0a5F";
+const metaCertContract = "0x5A9014A0f7E6481D81D5c3A7AC2B35463D633465";
 
 const URL = `https://noun-api.com/beta/pfp?name=`;
 
 const Profile: React.FC<ProfileProps> = ({ address }) => {
 	const [verified, setVerified] = useState(false);
 	const [hasToken, setHasToken] = useState(false);
-
+	const [metaIDTokenId, setMetaIDTokenId] = useState<number | undefined>();
+	const [tbaAddress, setTbaAddress] = useState<Address | undefined>();
 	const [claimed, setClaimed] = useState(false);
 
 	useEffect(() => {
@@ -31,7 +34,28 @@ const Profile: React.FC<ProfileProps> = ({ address }) => {
 		}
 	}, [hasToken, verified]);
 
-	const { data, isError, isLoading } = useContractRead({
+	useContractRead({
+		address: MetaIDContract,
+		abi,
+		functionName: "tokenOfOwnerByIndex",
+		args: [address, 0],
+		onSuccess(data: number) {
+			const tokenId = BigInt(data).toString();
+			setMetaIDTokenId(Number(tokenId));
+			const tokenboundClient = new TokenboundClient({
+				chainId: polygonMumbai.id,
+				walletClient,
+			});
+
+			const _tbaAddress = tokenboundClient.getAccount({
+				tokenContract: "0xCC779eA62dde267a66D7C36e684Ee32d498c0a5F",
+				tokenId,
+			});
+			setTbaAddress(_tbaAddress);
+		},
+	});
+
+	useContractRead({
 		address: MetaIDContract,
 		abi,
 		functionName: "hasId",
@@ -57,15 +81,6 @@ const Profile: React.FC<ProfileProps> = ({ address }) => {
 		account: address,
 		transport: window.ethereum ? custom(window.ethereum) : http(),
 	});
-	const tokenboundClient = new TokenboundClient({
-		chainId: polygonMumbai.id,
-		walletClient,
-	});
-
-	const tbaAddress = tokenboundClient.getAccount({
-		tokenContract: "0xCC779eA62dde267a66D7C36e684Ee32d498c0a5F",
-		tokenId: "1",
-	});
 
 	return (
 		<>
@@ -74,25 +89,45 @@ const Profile: React.FC<ProfileProps> = ({ address }) => {
 					<figure>
 						<img src={URL + address} alt={address} />
 					</figure>
-					<div className="card-body">
-						<a
-							className="card-title"
-							href={`https://mumbai.polygonscan.com/address/${tbaAddress}`}
-							target="_blank"
-						>
-							{cleanAddress(tbaAddress)}!
-						</a>
-						{verified && hasToken && <p>You are chain verified!</p>}
-						<div className="card-actions justify-end">
-							{verified && !hasToken && (
-								<button className="btn btn-accent mt-4" onClick={claim}>
-									Claim ID
-								</button>
-							)}
+					{tbaAddress && (
+						<div className="card-body">
+							<a
+								className="card-title"
+								href={`https://mumbai.polygonscan.com/address/${tbaAddress}`}
+								target="_blank"
+							>
+								<span className="hover:text-accent flex items-center">
+									TBA: {cleanAddress(tbaAddress)}!
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										strokeWidth={1.5}
+										stroke="currentColor"
+										className="w-6 h-6"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
+										/>
+									</svg>
+								</span>
+							</a>
+							{verified && hasToken && <p>You are chain verified!</p>}
+							<div className="card-actions justify-end">
+								{verified && !hasToken && (
+									<button className="btn btn-accent mt-4" onClick={claim}>
+										Claim ID
+									</button>
+								)}
+							</div>
+							<GetPoaps
+								tbaAddress={tbaAddress}
+								metaCertContract={metaCertContract}
+							/>
 						</div>
-
-						
-					</div>
+					)}
 				</div>
 			</div>
 		</>

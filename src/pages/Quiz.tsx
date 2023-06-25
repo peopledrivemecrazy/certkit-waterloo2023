@@ -54,7 +54,7 @@ const QuizPage = () => {
 		walletClient,
 	});
 
-	const { data, isError, isLoading } = useContractRead({
+	useContractRead({
 		address: MetaIDContract,
 		abi,
 		functionName: "tokenOfOwnerByIndex",
@@ -79,7 +79,6 @@ const QuizPage = () => {
 				tokenId: String(metaIDTokenId),
 			});
 
-			console.log(address, metaIDTokenId, tbaAddress);
 			const data = await submitQuiz(quizId, answers.join(","), tbaAddress);
 			if (data.passed) {
 				setPassed(true);
