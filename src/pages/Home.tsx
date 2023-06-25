@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import Profile from "../components/Profile";
+import GetQuizes from "../components/GetQuizes";
 
 const HomePage = () => {
 	const { isConnected, address } = useAccount();
@@ -32,9 +33,15 @@ const HomePage = () => {
 				)}
 			</div>
 			{address && (
-				<div>
-					<Profile address={address} />
-				</div>
+				<>
+					<div>
+						<Profile address={address} />
+					</div>
+
+					<div>
+						<GetQuizes />
+					</div>
+				</>
 			)}
 		</>
 	);
