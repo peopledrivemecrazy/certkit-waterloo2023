@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const URL = "https://meta-cert-test-43e7e5165044.herokuapp.com/available_tests";
 
@@ -49,12 +50,12 @@ const GetQuizes = () => {
 										</div>
 									</dl>
 									<div className="mt-6 border-t border-gray-900/5 px-6 py-6">
-										<a
-											href="#"
+										<Link
+											to={`/quiz/${quiz.id}`}
 											className="text-sm font-semibold leading-6 text-gray-900"
 										>
 											Take test <span aria-hidden="true">&rarr;</span>
-										</a>
+										</Link>
 									</div>
 								</div>
 							</div>

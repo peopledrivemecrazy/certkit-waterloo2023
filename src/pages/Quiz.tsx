@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { submitQuiz } from "../utils/api";
+import { useAccount } from "wagmi";
 const URL =
-	"https://meta-cert-test-43e7e5165044.herokuapp.com//get_questions?id=";
+	"https://meta-cert-test-43e7e5165044.herokuapp.com/get_questions?id=";
 
 export type Questions = Question[];
 
@@ -20,7 +22,7 @@ const QuizPage = () => {
 	const location = useLocation();
 	const [_, __, quizId] = location.pathname.split("/");
 	const [questions, setQuestions] = useState<Questions>([]);
-	const [answers, setAnswers] = useState<{ [key: string]: string }>({});
+	const { isConnected, address } = useAccount();
 
 	useEffect(() => {
 		fetch(URL + quizId)
@@ -34,22 +36,22 @@ const QuizPage = () => {
 			});
 	}, []);
 
-	const handleAnswerChange = (questionId: string, choiceId: string) => {
-		setAnswers((prevAnswers) => ({
-			...prevAnswers,
-			[questionId]: choiceId,
-		}));
-	};
-
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log("Answers:", answers);
+		const form = e.target as HTMLFormElement;
+		const formData = new FormData(form);
+		const answers: number[] = Array.from(formData.values()).map((value) =>
+			Number(value)
+		);
+		console.log({ address, isConnected });
+		console.log("Answers:", answers.join(","));
 		// Handle form submission logic
+		if (address) submitQuiz(quizId, answers.join(","), address);
 	};
 
 	return (
 		<>
-			<a href="/" className=" btn btn-sm">
+			<Link to="/" className=" btn btn-sm">
 				<span className="flex gap-1 items-center">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +69,7 @@ const QuizPage = () => {
 					</svg>
 					Go back
 				</span>
-			</a>
+			</Link>
 
 			<p>Quiz {quizId}</p>
 			<form onSubmit={handleSubmit}>
@@ -82,10 +84,6 @@ const QuizPage = () => {
 											type="radio"
 											name={question.questionId}
 											value={choice.choiceId}
-											checked={answers[question.questionId] === choice.choiceId}
-											onChange={() =>
-												handleAnswerChange(question.questionId, choice.choiceId)
-											}
 										/>
 										{choice.choice}
 									</label>
