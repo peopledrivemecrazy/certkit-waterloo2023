@@ -21,7 +21,7 @@ const URL = `https://noun-api.com/beta/pfp?name=`;
 
 const Profile: React.FC<ProfileProps> = ({ address }) => {
 	const [verified, setVerified] = useState(false);
-	const [hasToken, setHasToken] = useState(false);
+	const [hasToken, setHasToken] = useState<boolean | undefined>();
 	const [metaIDTokenId, setMetaIDTokenId] = useState<number | undefined>();
 	const [tbaAddress, setTbaAddress] = useState<Address | undefined>();
 	const [claimed, setClaimed] = useState(false);
@@ -52,6 +52,9 @@ const Profile: React.FC<ProfileProps> = ({ address }) => {
 				tokenId,
 			});
 			setTbaAddress(_tbaAddress);
+		},
+		onError() {
+			setHasToken(undefined);
 		},
 	});
 
@@ -89,6 +92,19 @@ const Profile: React.FC<ProfileProps> = ({ address }) => {
 					<figure>
 						<img src={URL + address} alt={address} />
 					</figure>
+
+					{hasToken === undefined && (
+						<div className="p-4">
+							<p>
+								Welcome new user, you can claim your nouns pfp associated to
+								your proof of personhood
+							</p>
+							<button className="btn btn-neutral mt-4" onClick={claim}>
+								Claim ID
+							</button>
+						</div>
+					)}
+
 					{tbaAddress && (
 						<div className="card-body">
 							<a
@@ -115,13 +131,7 @@ const Profile: React.FC<ProfileProps> = ({ address }) => {
 								</span>
 							</a>
 							{verified && hasToken && <p>You are chain verified!</p>}
-							<div className="card-actions justify-end">
-								{verified && !hasToken && (
-									<button className="btn btn-accent mt-4" onClick={claim}>
-										Claim ID
-									</button>
-								)}
-							</div>
+
 							<GetPoaps
 								tbaAddress={tbaAddress}
 								metaCertContract={metaCertContract}
