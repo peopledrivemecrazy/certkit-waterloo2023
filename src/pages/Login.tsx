@@ -21,7 +21,7 @@ const LoginPage = () => {
 	};
 
 	const action = "verify-worldid";
-	const app_id = "app_ea01236e21f90a3d095f9baa5c7303b2";
+	const app_id = "app_staging_cc3900212c02330d85a461c5fd19af91";
 	const credential_types = [CredentialType.Phone, CredentialType.Orb];
 	let navigate = useNavigate();
 	// useEffect(() => {
