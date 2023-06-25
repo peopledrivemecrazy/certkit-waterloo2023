@@ -2,9 +2,16 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { submitQuiz } from "../utils/api";
 import { useAccount } from "wagmi";
+import { TokenboundClient } from "@tokenbound/sdk";
+import { createWalletClient, custom, http, WalletClient } from "viem";
+import { polygonMumbai } from "viem/chains";
+import { useContractRead } from "wagmi";
+import { abi } from "../abi/MetaID.json";
 
 const URL =
 	"https://meta-cert-test-43e7e5165044.herokuapp.com/get_questions?id=";
+
+const MetaIDContract = "0xCC779eA62dde267a66D7C36e684Ee32d498c0a5F";
 
 export type Questions = Question[];
 
@@ -24,8 +31,8 @@ const QuizPage = () => {
 	const [_, __, quizId] = location.pathname.split("/");
 	const [questions, setQuestions] = useState<Questions>([]);
 	const [passed, setPassed] = useState<undefined | boolean>(undefined); // Initialize to undefined
+	const [metaIDTokenId, setMetaIDTokenId] = useState<number | undefined>();
 	const { isConnected, address } = useAccount();
-
 	useEffect(() => {
 		fetch(URL + quizId)
 			.then((res) => res.json())
@@ -37,6 +44,27 @@ const QuizPage = () => {
 			});
 	}, []);
 
+	const walletClient: WalletClient = createWalletClient({
+		chain: polygonMumbai,
+		account: address,
+		transport: window.ethereum ? custom(window.ethereum) : http(),
+	});
+	const tokenboundClient = new TokenboundClient({
+		chainId: polygonMumbai.id,
+		walletClient,
+	});
+
+	const { data, isError, isLoading } = useContractRead({
+		address: MetaIDContract,
+		abi,
+		functionName: "tokenOfOwnerByIndex",
+		args: [address, 0],
+		onSuccess(data: number) {
+			const tokenId = Number(BigInt(data).toString());
+			setMetaIDTokenId(tokenId);
+		},
+	});
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		const form = e.target as HTMLFormElement;
@@ -45,8 +73,14 @@ const QuizPage = () => {
 			Number(value)
 		);
 
-		if (address) {
-			const data = await submitQuiz(quizId, answers.join(","), address);
+		if (address && metaIDTokenId) {
+			const tbaAddress = tokenboundClient.getAccount({
+				tokenContract: MetaIDContract,
+				tokenId: String(metaIDTokenId),
+			});
+
+			console.log(address, metaIDTokenId, tbaAddress);
+			const data = await submitQuiz(quizId, answers.join(","), tbaAddress);
 			if (data.passed) {
 				setPassed(true);
 			} else {
@@ -112,9 +146,7 @@ const QuizPage = () => {
 					{passed ? (
 						<>
 							<h2 className="text-3xl">You passed!</h2>
-                            <p>
-                                Your POAP is on the way!
-                            </p>
+							<p>Your POAP is on the way!</p>
 						</>
 					) : (
 						<>
