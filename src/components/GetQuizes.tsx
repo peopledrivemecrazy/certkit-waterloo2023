@@ -24,12 +24,12 @@ const GetQuizes = () => {
 
 	return (
 		<>
-			<h1 className="text-3xl mt-4">Tests</h1>
+			<h1 className="text-3xl my-4">Tests</h1>
 			{quizes && (
 				<>
-					{quizes.map((quiz: Quiz) => (
-						<div className="grid grid-cols-3" key={quiz.id}>
-							<div className="">
+					<div className="grid grid-cols-3 gap-4">
+						{quizes.map((quiz: Quiz) => (
+							<div key={quiz.id}>
 								<h2 className="sr-only">Summary</h2>
 								<div className="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
 									<dl className="flex flex-wrap">
@@ -58,8 +58,8 @@ const GetQuizes = () => {
 									</div>
 								</div>
 							</div>
-						</div>
-					))}
+						))}
+					</div>
 				</>
 			)}
 		</>
