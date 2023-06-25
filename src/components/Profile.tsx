@@ -113,7 +113,7 @@ const Profile: React.FC<ProfileProps> = ({ address }) => {
 								target="_blank"
 							>
 								<span className="hover:text-accent flex items-center">
-									TBA: {cleanAddress(tbaAddress)}!
+									Token Bound Account: {cleanAddress(tbaAddress)}!
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -130,7 +130,7 @@ const Profile: React.FC<ProfileProps> = ({ address }) => {
 									</svg>
 								</span>
 							</a>
-							{verified && hasToken && <p>You are chain verified!</p>}
+							{verified && hasToken && <p>You are WorldID verified!</p>}
 
 							<GetPoaps
 								tbaAddress={tbaAddress}
