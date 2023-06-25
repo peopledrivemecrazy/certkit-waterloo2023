@@ -1,31 +1,26 @@
 import { useEffect, useState } from "react";
 
-
 const URL = "https://meta-cert-test-43e7e5165044.herokuapp.com/available_tests";
 
 interface Quiz {
 	id: number;
 	name: string;
 }
-const quizes = [{ id: 1, name: "Climate change" }];
+// const quizes = [{ id: 1, name: "Climate change" }];
 
 const GetQuizes = () => {
-	const [_, setQuizes] = useState<Quiz[]>();
-	// useEffect(() => {
-	// 	fetch(URL)
-	// 		.then((res) => res.json())
-	// 		.then((data) => {
-	// 			setQuizes(data);
-	//             console.log(data)
-	// 		})
-	// 		.catch((err) => {
-	// 			console.log(err);
-	// 		});
-	// }, []);
-
-	// useEffect(() => {
-	// 	setQuizes([{ id: 1, name: "Climate change" }]);
-	// });
+	const [quizes, setQuizes] = useState<Quiz[]>();
+	useEffect(() => {
+		fetch(URL)
+			.then((res) => res.json())
+			.then((data) => {
+				setQuizes(data);
+				console.log(data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
 
 	return (
 		<>
