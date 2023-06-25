@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-	CalendarDaysIcon,
-	CreditCardIcon,
-	UserCircleIcon,
-} from "@heroicons/react/20/solid";
+
 
 const URL = "https://meta-cert-test-43e7e5165044.herokuapp.com/available_tests";
 
@@ -12,8 +8,9 @@ interface Quiz {
 	name: string;
 }
 const quizes = [{ id: 1, name: "Climate change" }];
+
 const GetQuizes = () => {
-	const [quizes, setQuizes] = useState<Quiz[]>();
+	const [_, setQuizes] = useState<Quiz[]>();
 	// useEffect(() => {
 	// 	fetch(URL)
 	// 		.then((res) => res.json())
@@ -26,9 +23,9 @@ const GetQuizes = () => {
 	// 		});
 	// }, []);
 
-	useEffect(() => {
-		setQuizes([{ id: 1, name: "Climate change" }]);
-	});
+	// useEffect(() => {
+	// 	setQuizes([{ id: 1, name: "Climate change" }]);
+	// });
 
 	return (
 		<>
@@ -36,9 +33,8 @@ const GetQuizes = () => {
 			{quizes && (
 				<>
 					{quizes.map((quiz: Quiz) => (
-						// <li key={quiz.id}>{quiz.name}</li>
-						<div className="grid grid-cols-3">
-							<div className="lg:col-start-3 lg:row-end-1">
+						<div className="grid grid-cols-3" key={quiz.id}>
+							<div className="">
 								<h2 className="sr-only">Summary</h2>
 								<div className="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
 									<dl className="flex flex-wrap">
